@@ -42,5 +42,10 @@ namespace Labyrinth
                 enterKey = Console.ReadKey(true).Key;
             } while (enterKey != ConsoleKey.Enter);
         }
+
+        public bool IsEndGame()
+        {
+            return false;
+        }
     }
 }

@@ -10,8 +10,12 @@ namespace Labyrinth
             Game game = new Game(); 
 
             lobby.OpenLobby();
-            game.StartGame();
 
+            do
+            {
+                game.StartNewGame();
+
+            } while (!lobby.IsEndGame());
 
             Console.ReadKey();
         }
