@@ -1,15 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Labyrinth
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
+            Lobby lobby = new Lobby();
+            Game game = new Game(); 
+
+            lobby.OpenLobby();
+            game.StartGame();
+
+
+            Console.ReadKey();
         }
     }
 }
