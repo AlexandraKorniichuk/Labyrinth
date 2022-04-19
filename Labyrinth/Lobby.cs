@@ -27,11 +27,12 @@ namespace Labyrinth
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Use arrows for movement");
-            Console.WriteLine("Your character is '0', key is 'k', exits are '?'");
+            Console.WriteLine($"Your character is '{CellSymbol.PlayerSymbol}', key is '{CellSymbol.KeySymbol}', exits are '{CellSymbol.ExitSymbol}'");
             Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Press 'Enter' to start");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         private void CheckEnterKey()
@@ -45,7 +46,7 @@ namespace Labyrinth
 
         public bool IsEndGame()
         {
-            return false;
+            return true;
         }
     }
 }
