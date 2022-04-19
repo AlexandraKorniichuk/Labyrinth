@@ -4,14 +4,14 @@ namespace Labyrinth
 {
     public class InputController
     {
-        public static ConsoleKey GetInputArrow()
+        public static ConsoleKey GetInputMovementKey()
         {
-            ConsoleKey inputArrow;
+            ConsoleKey inputKey;
             do
             {
-                inputArrow = Console.ReadKey(true).Key;
-            } while (inputArrow != ConsoleKey.DownArrow && inputArrow != ConsoleKey.UpArrow && inputArrow != ConsoleKey.RightArrow && inputArrow != ConsoleKey.LeftArrow);
-            return inputArrow;
+                inputKey = Console.ReadKey(true).Key;
+            } while (inputKey != ConsoleKey.W && inputKey != ConsoleKey.A && inputKey != ConsoleKey.S && inputKey != ConsoleKey.D);
+            return inputKey;
         }
 
         public static void InputKey(ConsoleKey desiredKey)

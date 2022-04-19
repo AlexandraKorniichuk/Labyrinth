@@ -29,7 +29,7 @@ namespace Labyrinth
             Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Use arrows for movement");
+            Console.WriteLine("Use WASD for movement");
             Console.WriteLine($"Your character is '{CellSymbol.PlayerSymbol}', key is '{CellSymbol.KeySymbol}', exits are '{CellSymbol.ExitSymbol}'");
             Console.WriteLine();
 

@@ -7,13 +7,13 @@ namespace Labyrinth
         public static (int, int) GetDirection(string directionString)
         {
             int i = 0, j = 0;
-            if (directionString == "UpArrow")
+            if (directionString == "W")
                 i = -1;
-            else if (directionString == "DownArrow")
+            else if (directionString == "S")
                 i = 1;
-            else if (directionString == "RightArrow")
+            else if (directionString == "D")
                 j = 1;
-            else if (directionString == "LeftArrow")
+            else if (directionString == "A")
                 j = -1;
             return (i, j);
         }

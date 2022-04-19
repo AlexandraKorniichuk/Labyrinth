@@ -34,7 +34,7 @@ namespace Labyrinth
 
                 CheckHavingKey();
 
-                ConsoleKey inputArrow = InputController.GetInputArrow();
+                ConsoleKey inputArrow = InputController.GetInputMovementKey();
                 (int, int) direction = Converting.GetDirection(inputArrow.ToString());
 
                 (int, int) NewPosition = Converting.GetNewPostion(PlayerPosition, direction);
