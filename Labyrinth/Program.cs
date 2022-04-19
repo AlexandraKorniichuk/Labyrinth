@@ -7,17 +7,16 @@ namespace Labyrinth
         static void Main(string[] args)
         {
             Lobby lobby = new Lobby();
-            Game game = new Game(); 
 
             lobby.OpenLobby();
 
             do
             {
-                game.StartNewGame();
+                Game game = new Game();
+                game.StartNewRound();
 
-            } while (!lobby.IsEndGame());
-
-            Console.ReadKey();
+                lobby.EndRound();
+            } while (!lobby.IsEndGame);
         }
     }
 }

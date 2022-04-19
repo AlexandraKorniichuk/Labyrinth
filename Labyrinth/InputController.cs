@@ -22,5 +22,8 @@ namespace Labyrinth
                 inputKey = Console.ReadKey(true).Key;
             } while (inputKey != desiredKey);
         }
+
+        public static ConsoleKey GetInputKey() =>
+            Console.ReadKey(true).Key;
     }
 }

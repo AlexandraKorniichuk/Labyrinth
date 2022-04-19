@@ -4,6 +4,9 @@ namespace Labyrinth
 {
     public class Lobby
     {
+        public bool IsEndGame = true;
+        private ConsoleKey StartGameKey = ConsoleKey.Enter;
+        private ConsoleKey PlayAgainKey = ConsoleKey.Spacebar;
         public void OpenLobby()
         {
             ShowGreating();
@@ -31,18 +34,40 @@ namespace Labyrinth
             Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Press 'Enter' to start");
+            Console.WriteLine($"Press '{StartGameKey}' to start");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private void CheckEnterKey()
+        private void CheckEnterKey() =>
+            InputController.InputKey(StartGameKey);
+
+        public void EndRound()
         {
-            InputController.InputKey(ConsoleKey.Enter);
+            WriteResultMessage();
+            WriteOfferMessage();
+            IsEndGame = !CheckPlayAgainKey();
+            Console.Clear();
         }
 
-        public bool IsEndGame()
+        private void WriteResultMessage()
         {
-            return true;
+            if (Game.IsWin)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Congratulations, you made it out");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Your time is up");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
         }
+
+        private void WriteOfferMessage() => 
+            Console.WriteLine($"If you want to play again - press '{PlayAgainKey}'");
+
+        private bool CheckPlayAgainKey() =>
+            InputController.GetInputKey() == PlayAgainKey;
     }
 }

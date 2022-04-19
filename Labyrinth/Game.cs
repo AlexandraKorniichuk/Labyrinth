@@ -20,7 +20,7 @@ namespace Labyrinth
         public static bool IsWin;
 
         private Random rand = new Random();
-        public void StartNewGame()
+        public void StartNewRound()
         {
             IsWin = false;
 
@@ -30,10 +30,13 @@ namespace Labyrinth
             do
             {
                 DrawField(GameField);
-                WriteMovesMessage();
+                WriteMessages();
+
+                CheckHavingKey();
 
                 ConsoleKey inputArrow = InputController.GetInputArrow();
                 (int, int) direction = Converting.GetDirection(inputArrow.ToString());
+
                 (int, int) NewPosition = Converting.GetNewPostion(PlayerPosition, direction);
                 if (TryMove(GameField, NewPosition))
                     Move(NewPosition);
@@ -101,15 +104,26 @@ namespace Labyrinth
                 {
                     char cell;
                     if (PlayerPosition == (i, j))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         cell = CellSymbol.PlayerSymbol;
-                    else if (KeyPosition == (i, j))
+                    }
+                    else if (KeyPosition == (i, j) && !HaveGotKey)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         cell = CellSymbol.KeySymbol;
+                    }
                     else if (CheckExitPositions((i, j)))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         cell = CellSymbol.ExitSymbol;
+                    }
                     else
+                    {
                         cell = Field[i, j];
-
+                    }
                     Console.Write(cell);
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine();
             }
@@ -134,8 +148,43 @@ namespace Labyrinth
         private void Move((int, int) NewPosition) =>
             PlayerPosition = NewPosition;
 
+        private void WriteMessages()
+        {
+            WriteMovesMessage();
+            WriteKeyMessage();
+            WriteExitMessage();
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         private void WriteMovesMessage() =>
             Console.WriteLine($"Moves left: {MovesAmountLeft}");
+
+        private void WriteKeyMessage() 
+        {
+            if (CheckKeyPosition())
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("You've got a key!");
+            }
+        }
+
+        private void WriteExitMessage()
+        {
+            if (CheckExitPositions(PlayerPosition) || (PlayerPosition == ExitPositions[0] && !HaveGotKey))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Closed!");
+            }
+        }
+
+        private void CheckHavingKey()
+        {
+            if (CheckKeyPosition())
+                HaveGotKey = true;
+        }
+
+        private bool CheckKeyPosition() =>
+            PlayerPosition == KeyPosition && !HaveGotKey;
 
         private bool IsEndGame()
         {
