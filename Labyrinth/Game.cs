@@ -27,17 +27,28 @@ namespace Labyrinth
             CreateSpecialObjectsPositions();
             char[,] GameField = CreateField();
 
-            //while (!IsEndGame())
-            //{
-            DrawField(GameField);
-            //}
+            do
+            {
+                DrawField(GameField);
+                WriteMovesMessage();
+
+                ConsoleKey inputArrow = InputController.GetInputArrow();
+                (int, int) direction = Converting.GetDirection(inputArrow.ToString());
+                (int, int) NewPosition = Converting.GetNewPostion(PlayerPosition, direction);
+                if (TryMove(GameField, NewPosition))
+                    Move(NewPosition);
+
+                MovesAmountLeft--;
+                Console.Clear();
+            } while (!IsEndGame());
         }
 
         private void CreateSpecialObjectsPositions()
         {
             PlayerPosition = GetRandomPosition();
             KeyPosition = GetRandomPosition();
-            ExitPositions = new (int, int)[ExitsAmount] {
+            ExitPositions = new (int, int)[ExitsAmount] 
+            {
                 GetRandomPosition(),
                 GetRandomPosition(),
                 GetRandomPosition(),
@@ -54,27 +65,20 @@ namespace Labyrinth
                     int randNumber = rand.Next(0, 100);
                     char cell;
                     if (CheckSpecialObjectsPostion((i, j)))
-                    {
                         cell = CellSymbol.EmptySymbol;
-                    }
                     else if (WallChance > randNumber)
-                    {
                         cell = CellSymbol.WallSymbol;
-                    }
                     else
-                    {
                         cell = CellSymbol.EmptySymbol;
-                    }
+
                     Field[i, j] = cell;
                 }
             }
             return Field;
         }
 
-        private bool CheckSpecialObjectsPostion((int, int) currentCell)
-        {
-            return PlayerPosition == currentCell || KeyPosition == currentCell || CheckExitPositions(currentCell);
-        }
+        private bool CheckSpecialObjectsPostion((int, int) currentCell) =>
+            PlayerPosition == currentCell || KeyPosition == currentCell || CheckExitPositions(currentCell);
 
         private bool CheckExitPositions((int, int) currentCell)
         {
@@ -86,10 +90,8 @@ namespace Labyrinth
             return false;
         }
 
-        private (int, int) GetRandomPosition()
-        {
-            return (rand.Next(0, FieldSize.Item1), rand.Next(0, FieldSize.Item2));
-        }
+        private (int, int) GetRandomPosition() =>
+            (rand.Next(0, FieldSize.Item1), rand.Next(0, FieldSize.Item2));
 
         private void DrawField(char[,] Field)
         {
@@ -99,29 +101,54 @@ namespace Labyrinth
                 {
                     char cell;
                     if (PlayerPosition == (i, j))
-                    {
                         cell = CellSymbol.PlayerSymbol;
-                    }
                     else if (KeyPosition == (i, j))
-                    {
                         cell = CellSymbol.KeySymbol;
-                    }
                     else if (CheckExitPositions((i, j)))
-                    {
                         cell = CellSymbol.ExitSymbol;
-                    }
                     else
-                    {
                         cell = Field[i, j];
-                    }
+
                     Console.Write(cell);
                 }
                 Console.WriteLine();
             }
         }
 
+        private bool TryMove(char[,] Field, (int, int) NewPosition)
+        {
+            if (IsNewPositionOutOfField(NewPosition))
+                return false;
+            else if (IsNewPositionWall(Field, NewPosition))
+                return false;
+
+            return true;
+        }
+
+        private bool IsNewPositionWall(char[,] Field, (int, int) NewPosition) => 
+            Field[NewPosition.Item1, NewPosition.Item2] == '#';
+
+        private bool IsNewPositionOutOfField((int, int) NewPosition) =>
+            NewPosition.Item1 < 0 || NewPosition.Item2 < 0 || NewPosition.Item1 >= FieldSize.Item1 || NewPosition.Item2 >= FieldSize.Item2;
+
+        private void Move((int, int) NewPosition) =>
+            PlayerPosition = NewPosition;
+
+        private void WriteMovesMessage() =>
+            Console.WriteLine($"Moves left: {MovesAmountLeft}");
+
         private bool IsEndGame()
         {
+            if (HaveGotKey && PlayerPosition == ExitPositions[0])
+            {
+                IsWin = true;
+                return true;
+            }
+            else if (MovesAmountLeft == 0)
+            {
+                IsWin = false;
+                return true;
+            }
             return false;
         }
     }

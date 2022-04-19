@@ -37,11 +37,7 @@ namespace Labyrinth
 
         private void CheckEnterKey()
         {
-            ConsoleKey enterKey;
-            do
-            {
-                enterKey = Console.ReadKey(true).Key;
-            } while (enterKey != ConsoleKey.Enter);
+            InputController.InputKey(ConsoleKey.Enter);
         }
 
         public bool IsEndGame()
