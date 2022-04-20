@@ -4,7 +4,7 @@ namespace Labyrinth
 {
     public class Game
     {
-        private (int, int) FieldSize = (10, 15);
+        private (int i, int j) FieldSize = (10, 15);
         private const int WallChance = 25;
 
         private const int MaxMovesAmount = 40;
@@ -57,10 +57,10 @@ namespace Labyrinth
 
         private char[,] CreateField()
         {
-            char[,] Field = new char[FieldSize.Item1, FieldSize.Item2];
-            for (int i = 0; i < FieldSize.Item1; i++)
+            char[,] Field = new char[FieldSize.i, FieldSize.j];
+            for (int i = 0; i < FieldSize.i; i++)
             {
-                for (int j = 0; j < FieldSize.Item2; j++)
+                for (int j = 0; j < FieldSize.j; j++)
                 {
                     int randNumber = rand.Next(0, 100);
                     char cell;
@@ -91,16 +91,16 @@ namespace Labyrinth
         }
 
         private (int, int) GetRandomPosition() =>
-            (rand.Next(0, FieldSize.Item1), rand.Next(0, FieldSize.Item2));
+            (rand.Next(0, FieldSize.i), rand.Next(0, FieldSize.j));
 
         private (int, int) ChooseRightExit() =>
             ExitPositions[rand.Next(0, ExitsAmount)];
 
         private void DrawField(char[,] Field)
         {
-            for (int i = 0; i < FieldSize.Item1; i++)
+            for (int i = 0; i < FieldSize.i; i++)
             {
-                for (int j = 0; j < FieldSize.Item2; j++)
+                for (int j = 0; j < FieldSize.j; j++)
                 {
                     char cell;
                     if (PlayerPosition == (i, j))
@@ -145,11 +145,11 @@ namespace Labyrinth
             return true;
         }
 
-        private bool IsNewPositionWall(char[,] Field, (int, int) NewPosition) => 
-            Field[NewPosition.Item1, NewPosition.Item2] == '#';
+        private bool IsNewPositionWall(char[,] Field, (int i, int j) NewPosition) => 
+            Field[NewPosition.i, NewPosition.j] == '#';
 
-        private bool IsNewPositionOutOfField((int, int) NewPosition) =>
-            NewPosition.Item1 < 0 || NewPosition.Item2 < 0 || NewPosition.Item1 >= FieldSize.Item1 || NewPosition.Item2 >= FieldSize.Item2;
+        private bool IsNewPositionOutOfField((int i, int j) NewPosition) =>
+            NewPosition.i < 0 || NewPosition.j < 0 || NewPosition.i >= FieldSize.i || NewPosition.j >= FieldSize.j;
 
         private void Move((int, int) NewPosition) =>
             PlayerPosition = NewPosition;

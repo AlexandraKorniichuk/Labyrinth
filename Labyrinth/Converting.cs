@@ -17,7 +17,7 @@ namespace Labyrinth
                 j = -1;
             return (i, j);
         }
-        public static (int, int) GetNewPostion((int, int) OldPosition, (int, int) direction) =>
-            (OldPosition.Item1 + direction.Item1, OldPosition.Item2 + direction.Item2);
+        public static (int, int) GetNewPostion((int i, int j) OldPosition, (int i, int j) direction) =>
+            (OldPosition.i + direction.i, OldPosition.j + direction.j);
     }
 }
