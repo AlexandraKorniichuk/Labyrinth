@@ -26,36 +26,33 @@ namespace Labyrinth
 
             CreateSpecialObjectsPositions();
             char[,] GameField = CreateField();
+            (int, int) RightExit = ChooseRightExit();
 
             do
             {
                 DrawField(GameField);
-                WriteMessages();
+                WriteMessages(RightExit);
 
                 CheckHavingKey();
 
-                ConsoleKey inputArrow = InputController.GetInputMovementKey();
-                (int, int) direction = Converting.GetDirection(inputArrow.ToString());
-
+                (int, int) direction = InputDirection();
                 (int, int) NewPosition = Converting.GetNewPostion(PlayerPosition, direction);
+
                 if (TryMove(GameField, NewPosition))
                     Move(NewPosition);
 
                 MovesAmountLeft--;
                 Console.Clear();
-            } while (!IsEndGame());
+            } while (!IsEndGame(RightExit));
         }
 
         private void CreateSpecialObjectsPositions()
         {
             PlayerPosition = GetRandomPosition();
             KeyPosition = GetRandomPosition();
-            ExitPositions = new (int, int)[ExitsAmount] 
-            {
-                GetRandomPosition(),
-                GetRandomPosition(),
-                GetRandomPosition(),
-            };
+            ExitPositions = new (int, int)[ExitsAmount];
+            for (int i = 0; i < ExitsAmount; i++)
+                ExitPositions[i] = GetRandomPosition();
         }
 
         private char[,] CreateField()
@@ -96,6 +93,9 @@ namespace Labyrinth
         private (int, int) GetRandomPosition() =>
             (rand.Next(0, FieldSize.Item1), rand.Next(0, FieldSize.Item2));
 
+        private (int, int) ChooseRightExit() =>
+            ExitPositions[rand.Next(0, ExitsAmount)];
+
         private void DrawField(char[,] Field)
         {
             for (int i = 0; i < FieldSize.Item1; i++)
@@ -129,6 +129,12 @@ namespace Labyrinth
             }
         }
 
+        private (int, int) InputDirection()
+        {
+            ConsoleKey inputKeyMovement = InputController.GetInputMovementKey();
+            return Converting.GetDirection(inputKeyMovement.ToString());
+        }
+
         private bool TryMove(char[,] Field, (int, int) NewPosition)
         {
             if (IsNewPositionOutOfField(NewPosition))
@@ -148,11 +154,11 @@ namespace Labyrinth
         private void Move((int, int) NewPosition) =>
             PlayerPosition = NewPosition;
 
-        private void WriteMessages()
+        private void WriteMessages((int, int) RightExit)
         {
             WriteMovesMessage();
             WriteKeyMessage();
-            WriteExitMessage();
+            WriteExitMessage(RightExit);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -168,9 +174,9 @@ namespace Labyrinth
             }
         }
 
-        private void WriteExitMessage()
+        private void WriteExitMessage((int, int) RightExit)
         {
-            if (CheckExitPositions(PlayerPosition) || (PlayerPosition == ExitPositions[0] && !HaveGotKey))
+            if (CheckExitPositions(PlayerPosition) || (PlayerPosition == RightExit && !HaveGotKey))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Closed!");
@@ -186,9 +192,9 @@ namespace Labyrinth
         private bool CheckKeyPosition() =>
             PlayerPosition == KeyPosition && !HaveGotKey;
 
-        private bool IsEndGame()
+        private bool IsEndGame((int, int) RightExit)
         {
-            if (HaveGotKey && PlayerPosition == ExitPositions[0])
+            if (HaveGotKey && PlayerPosition == RightExit)
             {
                 IsWin = true;
                 return true;
