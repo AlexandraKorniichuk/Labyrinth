@@ -64,7 +64,7 @@ namespace Labyrinth
                 {
                     int randNumber = rand.Next(0, 100);
                     char cell;
-                    if (CheckSpecialObjectsPostion((i, j)))
+                    if (IsCellSpecialObject((i, j)))
                         cell = CellSymbol.EmptySymbol;
                     else if (WallChance > randNumber)
                         cell = CellSymbol.WallSymbol;
@@ -77,10 +77,10 @@ namespace Labyrinth
             return Field;
         }
 
-        private bool CheckSpecialObjectsPostion((int, int) currentCell) =>
-            PlayerPosition == currentCell || KeyPosition == currentCell || CheckExitPositions(currentCell);
+        private bool IsCellSpecialObject((int, int) currentCell) =>
+            PlayerPosition == currentCell || KeyPosition == currentCell || IsCellExit(currentCell);
 
-        private bool CheckExitPositions((int, int) currentCell)
+        private bool IsCellExit((int, int) currentCell)
         {
             for (int i = 0; i < ExitsAmount; i++)
             {
@@ -113,7 +113,7 @@ namespace Labyrinth
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         cell = CellSymbol.KeySymbol;
                     }
-                    else if (CheckExitPositions((i, j)))
+                    else if (IsCellExit((i, j)))
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                         cell = CellSymbol.ExitSymbol;
@@ -167,7 +167,7 @@ namespace Labyrinth
 
         private void WriteKeyMessage() 
         {
-            if (CheckKeyPosition())
+            if (HavePlayerReachedKey())
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("You've got a key!");
@@ -176,7 +176,7 @@ namespace Labyrinth
 
         private void WriteExitMessage((int, int) RightExit)
         {
-            if (CheckExitPositions(PlayerPosition) || (PlayerPosition == RightExit && !HaveGotKey))
+            if (IsCellExit(PlayerPosition) || (PlayerPosition == RightExit && !HaveGotKey))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Closed!");
@@ -185,11 +185,11 @@ namespace Labyrinth
 
         private void CheckHavingKey()
         {
-            if (CheckKeyPosition())
+            if (HavePlayerReachedKey())
                 HaveGotKey = true;
         }
 
-        private bool CheckKeyPosition() =>
+        private bool HavePlayerReachedKey() =>
             PlayerPosition == KeyPosition && !HaveGotKey;
 
         private bool IsEndGame((int, int) RightExit)

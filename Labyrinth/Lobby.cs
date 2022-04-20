@@ -10,7 +10,7 @@ namespace Labyrinth
         public void OpenLobby()
         {
             ShowGreating();
-            CheckEnterKey();
+            InputEnterKey();
             Console.Clear();
         }
 
@@ -38,14 +38,14 @@ namespace Labyrinth
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private void CheckEnterKey() =>
+        private void InputEnterKey() =>
             InputController.InputKey(StartGameKey);
 
         public void EndRound()
         {
             WriteResultMessage();
             WriteOfferMessage();
-            IsEndGame = !CheckPlayAgainKey();
+            IsEndGame = !HavePlayAgainKeyInput();
             Console.Clear();
         }
 
@@ -67,7 +67,7 @@ namespace Labyrinth
         private void WriteOfferMessage() => 
             Console.WriteLine($"If you want to play again - press '{PlayAgainKey}'");
 
-        private bool CheckPlayAgainKey() =>
+        private bool HavePlayAgainKeyInput() =>
             InputController.GetInputKey() == PlayAgainKey;
     }
 }
