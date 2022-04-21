@@ -82,9 +82,9 @@ namespace Labyrinth
 
         private bool IsCellExit((int, int) currentCell)
         {
-            for (int i = 0; i < ExitsAmount; i++)
+            foreach ((int, int) ExitPosition in ExitPositions)
             {
-                if (currentCell == ExitPositions[i])
+                if (currentCell == ExitPosition)
                     return true;
             }
             return false;
@@ -146,7 +146,7 @@ namespace Labyrinth
         }
 
         private bool IsNewPositionWall(char[,] Field, (int i, int j) NewPosition) => 
-            Field[NewPosition.i, NewPosition.j] == '#';
+            Field[NewPosition.i, NewPosition.j] == CellSymbol.ExitSymbol;
 
         private bool IsNewPositionOutOfField((int i, int j) NewPosition) =>
             NewPosition.i < 0 || NewPosition.j < 0 || NewPosition.i >= FieldSize.i || NewPosition.j >= FieldSize.j;
